@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys, re  # Importing necessary modules
+
 from argparse import ArgumentParser  # Importing ArgumentParser from the argparse module
 
 # Creating an ArgumentParser object with a description
@@ -22,11 +23,14 @@ args.seq = args.seq.upper()  # Note we just added this line
 
 # Checking if the sequence contains only valid nucleotides (ACGTU)
 if re.search('^[ACGTU]+$', args.seq):
+    # Checking if 'T' is present in the sequence to determine if it's DNA
+    if re.search('T', args.seq):
+        print('The sequence is DNA')
     # Checking if 'U' is present in the sequence to determine if it's RNA
-    if 'U' in args.seq:
+    elif re.search('U', args.seq):
         print('The sequence is RNA')
     else:
-        print('The sequence is DNA')
+        print('The sequence can be DNA or RNA')
 else:
     print('The sequence is not DNA nor RNA')
 
@@ -37,6 +41,6 @@ if args.motif:
     print(f'Motif search enabled: looking for motif "{args.motif}" in sequence')
     # Searching for the motif in the sequence and printing the result
     if re.search(args.motif, args.seq):
-        print("The motif was FOUND in the sequence")
+        print("The sequence was FOUND")
     else:
-        print("The motif was NOT FOUND in the sequence")
+        print("NOT FOUND in the sequence")
