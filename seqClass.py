@@ -36,7 +36,7 @@ else:
 
 # Checking if a motif is provided
 if args.motif:
-    args.motif = args.motif.upper()  # Converting the motif to uppercase
+    args.motif = args.motif.upper()  # Converting the motif to uppercase and:
     # Printing a message indicating motif search is enabled
     print(f'Motif search enabled: looking for motif "{args.motif}" in sequence')
     # Searching for the motif in the sequence and printing the result
