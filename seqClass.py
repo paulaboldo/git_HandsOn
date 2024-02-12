@@ -1,42 +1,45 @@
 #!/usr/bin/env python
-import sys, re  # Importing necessary modules
-from argparse import ArgumentParser  # Importing ArgumentParser from the argparse module
 
-# Creating an ArgumentParser object with a description
+import sys, re
+from argparse import ArgumentParser
+
+# Define an ArgumentParser object and its command-line arguments
 parser = ArgumentParser(description='Classify a sequence as DNA or RNA')
 
-# Adding command-line arguments for sequence and motif
-parser.add_argument("-s", "--seq", type=str, required=True, help="Input sequence (required)")
-parser.add_argument("-m", "--motif", type=str, required=False, help="Motif to search in the sequence")
+# Define command-line arguments
+parser.add_argument("-s", "--seq", type=str, required=True, help="Input sequence")
+parser.add_argument("-m", "--motif", type=str, required=False, help="Optional motif to search for")
 
-# Checking if no command-line arguments are provided, then printing help and exiting
+# Check if no command-line arguments are provided, print help, and exit if true
 if len(sys.argv) == 1:
     parser.print_help()
     sys.exit(1)
 
-# Parsing command-line arguments
+# Parse the command-line arguments
 args = parser.parse_args()
 
-# Converting the sequence to uppercase
-args.seq = args.seq.upper()  # Note we just added this line
+# Convert the sequence to uppercase
+args.seq = args.seq.upper()  # Ensure uniform case for sequence comparison
 
-# Checking if the sequence contains only valid nucleotides (ACGTU)
+# Check if the sequence consists of valid DNA or RNA characters
 if re.search('^[ACGTU]+$', args.seq):
-    # Checking if 'U' is present in the sequence to determine if it's RNA
-    if 'U' in args.seq:
-        print('The sequence is RNA')
-    else:
+    # Determine if the sequence is DNA, RNA, or neither
+    if 'T' in args.seq and 'U' not in args.seq:
         print('The sequence is DNA')
+    elif 'U' in args.seq and 'T' not in args.seq:
+        print('The sequence is RNA')
+    elif 'T' in args.seq and 'U' in args.seq:
+        print('The sequence is not DNA or RNA')
+    else:
+        print('The sequence can be DNA or RNA')
 else:
     print('The sequence is not DNA nor RNA')
 
-# Checking if a motif is provided
+# If a motif is provided, convert it to uppercase and search for it in the sequence
 if args.motif:
-    args.motif = args.motif.upper()  # Converting the motif to uppercase and:
-    # Printing a message indicating motif search is enabled
-    print(f'Motif search enabled: looking for motif "{args.motif}" in sequence')
-    # Searching for the motif in the sequence and printing the result
+    args.motif = args.motif.upper()
+    print(f'Motif search enabled: Looking for motif "{args.motif}" in sequence "{args.seq}"... ', end='')
     if re.search(args.motif, args.seq):
-        print("The motif was FOUND in the sequence")
+        print("FOUND")
     else:
-        print("The motif was NOT FOUND in the sequence")
+        print("NOT FOUND")
